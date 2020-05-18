@@ -17,7 +17,7 @@
       color: white;
     }
     #form {
-        position: absolute;
+        position: fixed;
         right: 100;
         background-color: beige;
         z-index: 9999;
@@ -43,14 +43,14 @@
     <input id="filename" value="ARM_OTK_incoming/TOBE%20&mdash;%20ARM_OTK%20&mdash;%20incoming.bpmn" />
     <br/>
     <label for="commit1SHA">Commit 1 SHA:</label>
-    <input id="commit1SHA" value="fe0565180533a528afcdd59b0532d7d05077b89b" />
+    <input id="commit1SHA" value="5b35ef7c984daf6accc18650f86660a7f5ccbd9f" />
     <input id="chk1" type="checkbox" onclick="return false;">
     <br/>
     <label for="commit2SHA">Commit 2 SHA:</label>
     <input id="commit2SHA" value="ee34e9b5c4fa1f4097375435aef9057ba1a1e924" />
     <input id="chk2" type="checkbox" onclick="return false;">
     <br/>
-    <button id="switch" type="button">Switch</button>
+    <button id="switch" type="button" onclick="switchDiagrams()">Switch</button>
   </div>
   <div id="diagram1">
   </div>
@@ -107,6 +107,25 @@
             bpmn.annotation("sid-C7031B1A-7F7E-4846-B046-73C638547449").addDiv("<span>Test Div</span>", ["testDivClass"]);
         });
     })
+
+    function switchDiagrams(){
+        var diagram1 = document.getElementById("diagram1")
+        var diagram2 = document.getElementById("diagram2")
+        var chk1 = document.getElementById("chk1")
+        var chk2 = document.getElementById("chk2")
+        // element.classList.add("mystyle");
+        if (diagram1.style.display == 'block') {
+            diagram1.style.display='none';
+            diagram2.style.display='block';
+            chk1.checked = false;
+            chk2.checked = true;
+        } else {
+            diagram1.style.display='block';
+            diagram2.style.display='none';
+            chk1.checked = true;
+            chk2.checked = false;
+        }
+    }
 
   </script>
 </body>
