@@ -24,9 +24,9 @@
         padding: 20px;
         opacity: 0.75;
     }
-    #diagram2 {
-        position: absolute;
-        top: 0;
+    #diagram2, #diagram1 {
+        position: absolute !important;
+        top: 50;
         left: 0;
     }
   </style>
@@ -37,16 +37,20 @@
     <input id="authorName" value="Nugumanov" />
     <br/>
     <label for="repoName">Repo name:</label>
-    <input id="repoName" value="start" />
+    <input id="repoName" value="magnetron_bpmn" />
     <br/>
     <label for="filename">File name with path:</label>
-    <input id="filename" value="README.md" />
+    <input id="filename" value="ARM_OTK_incoming/TOBE%20&mdash;%20ARM_OTK%20&mdash;%20incoming.bpmn" />
     <br/>
     <label for="commit1SHA">Commit 1 SHA:</label>
-    <input id="commit1SHA" value="88a0ea130a908b490690159417cc6dd0b6328ef8" />
+    <input id="commit1SHA" value="fe0565180533a528afcdd59b0532d7d05077b89b" />
+    <input id="chk1" type="checkbox" onclick="return false;">
     <br/>
     <label for="commit2SHA">Commit 2 SHA:</label>
-    <input id="commit2SHA" value="be06604d346b28ba5bbf6a9199f47fa028fa5fc3" />
+    <input id="commit2SHA" value="ee34e9b5c4fa1f4097375435aef9057ba1a1e924" />
+    <input id="chk2" type="checkbox" onclick="return false;">
+    <br/>
+    <button id="switch" type="button">Switch</button>
   </div>
   <div id="diagram1">
   </div>
@@ -69,13 +73,6 @@
         // { name: "bpmn", location: "src/bpmn" }
       ]
     });
-
-    require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
-        new Bpmn().renderUrl("test/resources/task_loop.bpmn", {
-            diagramElement : "diagram1",
-            overlayHtml : '<div style="position: relative; top:100%"></div>'
-        });
-    });
           
     var authorName = document.getElementById("authorName").value;
     var repoName = document.getElementById("repoName").value;
@@ -83,8 +80,8 @@
     var repoUrl = 'https://raw.githubusercontent.com/' + authorName + '/' + repoName
     var commit1SHA = document.getElementById("commit1SHA").value
     var commit2SHA = document.getElementById("commit2SHA").value
-    var file1=''
-    var file2='1'
+    var file1='1'
+    var file2='2'
 
 
     var request1 = repoUrl + '/' + commit1SHA + '/' + filename
@@ -92,14 +89,24 @@
     console.log(request1)
     console.log(request2)
 
-    fetch(request1)
-        //.then(data1=>{return data1.json()})
-        .then(res=>{console.log(res)})
-    fetch(request2)
-        //.then(data2=>{return data2.json()})
-        .then(res=>{console.log(res)})
-
-    document.getElementById('diagram2').innerHTML = file2;
+    require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
+        new Bpmn().renderUrl(request1, {
+            diagramElement : "diagram1",
+            overlayHtml : '<div style="position: relative; top:100%"></div>'
+        }).then(function (bpmn){
+            bpmn.zoom(0.5);
+            bpmn.annotation("sid-C7031B1A-7F7E-4846-B046-73C638547449").setHtml('<span class="bluebox"  style="position: relative; top:100%">New Text</span>').addClasses(["highlight"]);
+            bpmn.annotation("sid-C7031B1A-7F7E-4846-B046-73C638547449").addDiv("<span>Test Div</span>", ["testDivClass"]);
+        });
+        new Bpmn().renderUrl(request2, {
+            diagramElement : "diagram2",
+            overlayHtml : '<div style="position: relative; top:100%"></div>'
+        }).then(function (bpmn){
+            bpmn.zoom(0.5);
+            bpmn.annotation("sid-C7031B1A-7F7E-4846-B046-73C638547449").setHtml('<span class="bluebox"  style="position: relative; top:100%">New Text</span>').addClasses(["highlight"]);
+            bpmn.annotation("sid-C7031B1A-7F7E-4846-B046-73C638547449").addDiv("<span>Test Div</span>", ["testDivClass"]);
+        });
+    })
 
   </script>
 </body>
