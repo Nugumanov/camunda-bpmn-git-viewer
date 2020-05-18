@@ -1,0 +1,106 @@
+<html>
+<head>
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <style type="text/css">
+    .highlight  {
+      -webkit-box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* WebKit */
+      -moz-box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* Firefox */
+      box-shadow: 0px 0px 35px 5px rgba(85, 255, 13, 1); /* Standard */
+      border-radius: 5px;
+    }
+
+    .bluebox {
+      background-color: blue;
+      color: white;
+    }
+    #form {
+        position: absolute;
+        right: 100;
+        background-color: beige;
+        z-index: 9999;
+        padding: 20px;
+        opacity: 0.75;
+    }
+    #diagram2 {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="form">
+    <label for="authorName">GitHub name:</label>
+    <input id="authorName" value="Nugumanov" />
+    <br/>
+    <label for="repoName">Repo name:</label>
+    <input id="repoName" value="start" />
+    <br/>
+    <label for="filename">File name with path:</label>
+    <input id="filename" value="README.md" />
+    <br/>
+    <label for="commit1SHA">Commit 1 SHA:</label>
+    <input id="commit1SHA" value="88a0ea130a908b490690159417cc6dd0b6328ef8" />
+    <br/>
+    <label for="commit2SHA">Commit 2 SHA:</label>
+    <input id="commit2SHA" value="be06604d346b28ba5bbf6a9199f47fa028fa5fc3" />
+  </div>
+  <div id="diagram1">
+  </div>
+  <div id="diagram2">
+  </div>
+
+  <script src="lib/require/require.js"></script>
+
+  <script>
+    require({
+      baseUrl: "./",
+      paths: {
+        'jquery' : 'lib/jquery/jquery-1.7.2.min',
+        'bpmn/Bpmn' : 'build/bpmn.min',
+      },
+      packages: [
+        { name: "dojo", location: "lib/dojo/dojo" },
+        { name: "dojox", location: "lib/dojo/dojox"},
+        // provided by build/bpmn.min.js
+        // { name: "bpmn", location: "src/bpmn" }
+      ]
+    });
+
+    require(["bpmn/Bpmn", "dojo/domReady!"], function(Bpmn) {
+        new Bpmn().renderUrl("test/resources/task_loop.bpmn", {
+            diagramElement : "diagram1",
+            overlayHtml : '<div style="position: relative; top:100%"></div>'
+        });
+    });
+          
+    var authorName = document.getElementById("authorName").value;
+    var repoName = document.getElementById("repoName").value;
+    var filename = document.getElementById("filename").value;
+    var repoUrl = 'https://raw.githubusercontent.com/' + authorName + '/' + repoName
+    var commit1SHA = document.getElementById("commit1SHA").value
+    var commit2SHA = document.getElementById("commit2SHA").value
+    var file1=''
+    var file2='1'
+
+
+    var request1 = repoUrl + '/' + commit1SHA + '/' + filename
+    var request2 = repoUrl + '/' + commit2SHA + '/' + filename
+    console.log(request1)
+    console.log(request2)
+
+    fetch(request1)
+        //.then(data1=>{return data1.json()})
+        .then(res=>{console.log(res)})
+    fetch(request2)
+        //.then(data2=>{return data2.json()})
+        .then(res=>{console.log(res)})
+
+    document.getElementById('diagram2').innerHTML = file2;
+
+  </script>
+</body>
+</html>
